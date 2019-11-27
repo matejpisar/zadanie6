@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="author" content="Matej Pisár">
+  <meta name="viewport" content="width=device-width, initial-scale=0.8">
+  <link rel="stylesheet" type="text/css" href="./zadanie6.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.1/css/ol.css"
+    type="text/css">
+  <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.1/build/ol.js"></script>
+  <title>WMS Kocovce_zadanie5</title>
+</head>
+
+<body>
+  <div id="map" class="map">
+    <input class="skryt" id="skryt" onclick="zhluk_funkcii2()" type="button" value="Položky menu"></input>
+    <div id="odstranenie">
+      <input id="ukazat" class="ukazat" style="display:none" onclick="pridanie_vrstiev()" type="button"
+        value="Pridanie vrstiev do mapy"></button>
+      <input id="vrstvy" class="vrstvy" style="display:none" onclick="tabulka()" type="button"
+        value="Zoznam existujucich vrstiev"></button>
+      <table id="tabulka" style="display:none"></table>
+    </div>
+  </div>
+  <div id="xml" class="xml">
+    <input class="getcapa" id="getcapa" onclick="zhluk_funkcii()" style="display:none" type="button"
+      value="Zobraziť Capabilities"></input>
+    <pre class="log-container"><code id="Capabilities_xml"></code></pre>
+  </div>
+  <script src="./zadanie6.js"></script>
+</body>
+
+</html>

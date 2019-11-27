@@ -1,0 +1,104 @@
+html, body {
+    height: 100%;
+    margin: 0px;
+    width: 100%;
+  }
+  
+  
+  div.map {
+      padding:0px;
+      height: calc((8*100vh)/8);
+      width: 100%;
+      margin:0px;
+    }
+  
+  div.xml {
+    height: calc((0*100vh)/8);
+    margin:0px;
+    padding:0px;
+    width: 100%;
+  }
+  
+  pre.log-container {
+      width: 100%;
+      overflow: auto;
+      height: 85%;
+      margin:0px;
+  }
+
+  table {
+    background-color: white; 
+    color: grey; 
+    border-collapse: collapse;
+    position: absolute;
+    opacity:0.7;
+    left: 10px;
+    top: 250px;
+    z-index: 10;
+  }
+  
+  table, td, th {
+    border: 1px solid black;
+  }
+ 
+th {
+  font-style: italic;
+  font-weight: bold;
+  padding: 0px;
+}
+
+  td {
+    text-align: center;
+    padding: 0px;
+  }
+
+  input {
+    background-color: white; 
+    color: grey; 
+    border: 2px solid black;
+    padding: 5px;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+div.odstranenie {
+  display:block;
+  position: absolute;
+  left: 10px;
+  z-index: 15;
+}
+
+  input.vrstvy {
+    position: absolute;
+    left:10px;
+    top: 150px;
+    opacity:0.7;
+  }
+
+
+  input.ukazat {
+    position: absolute;
+    left:10px;
+    top: 200px;
+    opacity:0.7;
+  }
+
+  input.skryt {
+    position: absolute;
+    right: 10px;
+    margin-top: 30px;
+    opacity:0.7;
+    z-index: 10;
+  }
+
+  input.getcapa {
+    margin-left:10px;
+    z-index: 40;
+    position: absolute;
+    top: 100px;
+  }
+
+  input:hover {
+    background-color: #e7e7e7;
+    color: black;
+  }
