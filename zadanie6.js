@@ -6,7 +6,7 @@ const ImageWMS = ol.source.ImageWMS;
 const OSM = ol.source.OSM;
 const WMSCapabilities = ol.format.WMSCapabilities;
 let parser = new ol.format.WMSCapabilities();
-const olLayers = [];
+var layers = [];
 
 var view = new View({
   center: [17.889477, 48.749152],
@@ -16,7 +16,7 @@ var view = new View({
 
 
 
-var layers = [
+var OSM_layer = [
   new TileLayer({
     source: new OSM()
   }),
@@ -24,7 +24,7 @@ var layers = [
 
 let map = new Map(
   {
-  layers: layers,
+  layers: OSM_layer,
   target: 'map',
   view: view
 });
@@ -54,19 +54,19 @@ let x = document.getElementById("tabulka");
       let table = "<tr><th>Vloženie vrstvy</th><th>Označenie vrstvy </th><th>  Možnosť dopytovania</th></tr>";
       for (let riadky = 1; riadky < objekty.length; riadky++) {
         let wmsSource = new ImageLayer({
-            url: 'http://localhost:8080/geoserver/WMS_Kocovce/wms',
+            url: url,
             params: { LAYERS: [objekty[riadky].Name] },
             ratio: 1,
             serverType: 'geoserver',
             crossOrigin: 'anonymous'
           })
-          var layer = new ImageLayer ({
+          var layers = new ImageLayer ({
             source: wmsSource,
             extent: [17.79569523402574, 48.71936026587261, 17.957725778672316, 48.79917418319719]
           
         })
      
-        olLayers.push(layer)
+        OSM_layer.push(layers)
 
 
         table += '<tr>';
@@ -99,7 +99,7 @@ function pridanie_vrstiev() {
   console.log(checboxArray)
   checboxArray.forEach(function (checkbox) {
     const index = checkbox.id.split('-')[1];
-    const layer = olLayer[index];
+    const layer = OSM_layer[index];
     if (checkbox.checked) {
 
       try {
