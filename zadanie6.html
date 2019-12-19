@@ -4,30 +4,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="author" content="Matej Pisár">
-  <meta name="viewport" content="width=device-width, initial-scale=0.8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="./zadanie6.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.1/css/ol.css"
-    type="text/css">
   <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.1/build/ol.js"></script>
   <title>WMS Kocovce</title>
 </head>
 
 <body>
-  <div id="map" class="map">
-    <input class="skryt" id="skryt" onclick="zhluk_funkcii2()" type="button" value="Položky menu"></input>
-    <div id="odstranenie">
-      <input id="ukazat" class="ukazat" style="display:none" onclick="pridanie_vrstiev()" type="button"
-        value="Pridanie vrstiev do mapy"></button>
+  <div id="mySidebar" class="sidebar">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">x</a>
+    <input class="skryt" id="skryt" onclick="zhluk_funkcii3()" type="button" value="Vlozenie url"></input>
+    <div>
+      <input class="url" style="display:none" id="url" value=" "></input>
+      <button class="url_button" id="url_button" style="display:none" onclick="funkcia_pre_url()">Pridaj url</button>
+    </div>
+
+    <input class="skryt" id="skryt" onclick="zhluk_funkcii2()" type="button" value="Manipulacia s vrstvami"></input>
+    <div>
       <input id="vrstvy" class="vrstvy" style="display:none" onclick="tabulka()" type="button"
-        value="Zoznam existujucich vrstiev"></button>
+        value="Zoznam existujucich vrstiev"></input>
       <table id="tabulka" style="display:none"></table>
+      <input id="ukazat" class="ukazat" style="display:none" onclick="pridanie_vrstiev()" type="button"
+        value="Pridanie/Odobranie vrstiev"></input>
+      <div id="info" class="info">&nbsp;</div>
     </div>
   </div>
-  <div id="xml" class="xml">
-    <input class="getcapa" id="getcapa" onclick="zhluk_funkcii()" style="display:none" type="button"
-      value="Zobraziť Capabilities"></input>
-    <pre class="log-container"><code id="Capabilities_xml"></code></pre>
+
+
+
+  <div id="main">
+    <button class="openbtn" id="openbtn" onclick="openNav()">☰</button>
+    <div id='map'></div>
   </div>
+
   <script src="./zadanie6.js"></script>
 </body>
 

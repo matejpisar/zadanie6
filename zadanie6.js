@@ -8,45 +8,42 @@ const WMSCapabilities = ol.format.WMSCapabilities;
 let parser = new ol.format.WMSCapabilities();
 const olLayers = [];
 
+var view = new View({
+  center: [17.889477, 48.749152],
+  zoom: 13,
+  projection: "EPSG:4326",
+})
 
-let layers = [
+
+
+var layers = [
   new TileLayer({
     source: new OSM()
   }),
 ];
-let map = new Map({
+
+let map = new Map(
+  {
   layers: layers,
   target: 'map',
-  view: new View({
-    center: [17.889477, 48.749152],
-    zoom: 13,
-    projection: 'EPSG:4326'
-  })
+  view: view
 });
 
-function getcapabilities() {
-  fetch('http://localhost:8080/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities', { mode: 'cors' }).then(function (response) {
-    return response.text();
-  }).then(function (text) {
-
-    let parser2 = new DOMParser();
-    XMLDocument = parser2.parseFromString(text, 'text/xml');
-    document.getElementById('Capabilities_xml').textContent = text;
-
-  })
-};
-
-
-
-
-
+function funkcia_pre_url() {
+  const x = document.getElementById("url").value;
+  alert("Vložil si url");
+}
 
 function tabulka() {
-  fetch('http://localhost:8080/geoserver/WMS_Kocovce/wms?service=WMS&version=1.3.0&request=GetCapabilities', { mode: 'cors' }).then(function (response) {
+  const url = document.getElementById("url").value;
+  if (!url) {
+      alert('Nie je vložená žiadna url adresa')
+      return;
+    }
+  fetch(url).then(function (response) {
     return response.text();
   }).then(function (text) {
-
-    let x = document.getElementById("tabulka");
+let x = document.getElementById("tabulka");
     if (x.style.display === "none") {
       x.style.display = "block"
 
@@ -54,36 +51,44 @@ function tabulka() {
       let data = parser.read(text);
       let objekty = data.Capability.Layer.Layer;
 
-      let table = "<tr><th>Označenie vrstvy</th><th>Možnosť dopytovania</th><th>Vloženie vrstvy</th></tr>";
+      let table = "<tr><th>Vloženie vrstvy</th><th>Označenie vrstvy </th><th>  Možnosť dopytovania</th></tr>";
       for (let riadky = 1; riadky < objekty.length; riadky++) {
-        const layer = new ImageLayer({
-          extent: [17.79569523402574, 48.71936026587261, 17.957725778672316, 48.79917418319719],
-          source: new ImageWMS({
+        let wmsSource = new ImageLayer({
             url: 'http://localhost:8080/geoserver/WMS_Kocovce/wms',
             params: { LAYERS: [objekty[riadky].Name] },
             ratio: 1,
-            serverType: 'geoserver'
-          }),
+            serverType: 'geoserver',
+            crossOrigin: 'anonymous'
+          })
+          var layer = new ImageLayer ({
+            source: wmsSource,
+            extent: [17.79569523402574, 48.71936026587261, 17.957725778672316, 48.79917418319719]
+          
         })
+     
         olLayers.push(layer)
 
 
         table += '<tr>';
         for (let stlpce = 1; stlpce <= 1; stlpce++) {
-          table += '<tr>' + '<td>' + objekty[riadky].Name + '</td>' + '<td>' + objekty[riadky].queryable + '</td>' + '<td>' + `<input class="checkbox-class" center id="checkbox-${riadky - 1}"  type = "checkbox"/>` + '</td>' + '</tr>';
+          table += '<tr>' + '<td>' + `<input class="checkbox-class" center id="checkbox-${riadky}"  type = "checkbox"/>` +  '</td>' + '<td>' + objekty[riadky].Name + '</td>' + '<td>' + objekty[riadky].queryable +'</td>' + '</tr>';
         }
         table += '</tr>';
       }
 
-      document.getElementById("tabulka").innerHTML = table;
-    } else {
-      x.style.display = "none";
+     
 
-    }
+    document.getElementById("tabulka").innerHTML = table;
+  } else {
+    x.style.display = "none";
+
+  }
 
 
-  })
+})
 }
+
+    
 
 
 
@@ -94,7 +99,7 @@ function pridanie_vrstiev() {
   console.log(checboxArray)
   checboxArray.forEach(function (checkbox) {
     const index = checkbox.id.split('-')[1];
-    const layer = olLayers[index];
+    const layer = olLayer[index];
     if (checkbox.checked) {
 
       try {
@@ -131,8 +136,8 @@ function skryvanie_tlacitka2() {
   }
 }
 
-function skryvanie_capa() {
-  let x = document.getElementById("getcapa");
+function skryvanie_vloz_url() {
+  let x = document.getElementById("url");
   if (x.style.display === "none") {
     x.style.display = "block";
   } else {
@@ -140,21 +145,72 @@ function skryvanie_capa() {
   }
 }
 
+function pridanie_vloz_url() {
+  let x = document.getElementById("url_button");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+
+
 function zhluk_funkcii2() {
   skryvanie_tlacitka1();
   skryvanie_tlacitka2();
-  skryvanie_capa();
+}
+
+function zhluk_funkcii3() {
+  skryvanie_vloz_url();
+  pridanie_vloz_url()
+}
+
+map.on('singleclick', function (evt) {
+  const sources = [];
+  map.getLayers().forEach(layer => sources.push(layer.getSource()));
+  document.getElementById('info').innerHTML = '';
+  var viewResolution = view.getResolution();
+  sources.forEach((wmsSource) => {
+      var url = wmsSource.getFeatureInfoUrl && wmsSource.getFeatureInfoUrl(evt.coordinate, viewResolution, 'EPSG:4326',
+      { 'INFO_FORMAT': 'text/html' });
+      if (url) {
+          fetch(url)
+          .then(function (response) { return response.text(); })
+          .then(function (html) {
+                  document.getElementById('info').insertAdjacentHTML( 'beforeend', html );
+              });
+      }
+
+  })
+
+
+});
+map.on('pointermove', function(evt) 
+  {
+    if (evt.dragging) 
+    {
+      return;
+    }
+    var pixel = map.getEventPixel(evt.originalEvent);
+    var hit = map.forEachLayerAtPixel(pixel, function() 
+    {
+      return true;
+    });
+    map.getTargetElement().style.cursor = hit ? 'pointer' : '';
+  }
+);
+
+
+
+
+function openNav() {
+  document.getElementById("mySidebar").style.width = "300px";
+  document.getElementById("main").style.marginLeft = "300px";
+}
+
+function closeNav() {
+  document.getElementById("mySidebar").style.width = "0";
+  document.getElementById("main").style.marginLeft= "0";
 }
 
 
-
-function zmena_rozlozenia() {
-  document.getElementById("map").style.height = "calc((2*100vh)/3)";
-  document.getElementById("xml").style.height = "calc((1*100vh)/3)";
-  document.getElementById("skryt").style.value = "Skryt polozky";
-}
-
-function zhluk_funkcii() {
-  zmena_rozlozenia();
-  getcapabilities();
-}
