@@ -51,22 +51,18 @@ let x = document.getElementById("tabulka");
       let data = parser.read(text);
       let objekty = data.Capability.Layer.Layer;
 
-      let table = "<tr><th>Vloženie vrstvy</th><th>Označenie vrstvy </th><th>  Možnosť dopytovania</th></tr>";
+      let table = "<tr><th>Označenie vrstvy</th><th>Možnosť dopytovania</th><th>Vloženie vrstvy</th></tr>";
       for (let riadky = 1; riadky < objekty.length; riadky++) {
-        let wmsSource = new ImageLayer({
+        const layer = new ImageLayer({
+          extent: [17.79569523402574, 48.71936026587261, 17.957725778672316, 48.79917418319719],
+          source: new ImageWMS({
             url: url,
             params: { LAYERS: [objekty[riadky].Name] },
             ratio: 1,
-            serverType: 'geoserver',
-            crossOrigin: 'anonymous'
-          })
-          var layers = new ImageLayer ({
-            source: wmsSource,
-            extent: [17.79569523402574, 48.71936026587261, 17.957725778672316, 48.79917418319719]
-          
+            serverType: 'geoserver'
+          }),
         })
-     
-        OSM_layer.push(layers)
+        OSM_layer.push(layer)
 
 
         table += '<tr>';
